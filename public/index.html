@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduNest — Student Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Login Screen -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-name">EduNest</span>
+        <span class="logo-tagline">Student Management Portal</span>
+      </div>
+      <form id="login-form" onsubmit="return submitLogin(event)">
+        <div class="form-group">
+          <label>Username</label>
+          <input id="login-user" autocomplete="username" placeholder="admin" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••" required />
+        </div>
+        <div class="login-error" id="login-error"></div>
+        <button class="btn btn-primary login-btn" type="submit">Sign In →</button>
+      </form>
+      <div class="login-hint">Default: <code>admin / admin123</code> — change it in Settings after first login.</div>
+    </div>
+  </div>
+
+  <!-- App (hidden until authenticated) -->
+  <div id="app" hidden>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <span class="logo-icon">◈</span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">EduNest</span>
+          <span class="logo-tagline">Student Portal</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+          <span class="nav-icon">⬡</span>
+          <span class="nav-label">Dashboard</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="students" onclick="navigate('students')">
+          <span class="nav-icon">◎</span>
+          <span class="nav-label">Students</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="attendance" onclick="navigate('attendance')">
+          <span class="nav-icon">◷</span>
+          <span class="nav-label">Attendance</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="marks" onclick="navigate('marks')">
+          <span class="nav-icon">◈</span>
+          <span class="nav-label">Marks</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="fees" onclick="navigate('fees')">
+          <span class="nav-icon">◉</span>
+          <span class="nav-label">Fees</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="reports" onclick="navigate('reports')">
+          <span class="nav-icon">⚠</span>
+          <span class="nav-label">Parent Alerts</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="timetable" onclick="navigate('timetable')">
+          <span class="nav-icon">▦</span>
+          <span class="nav-label">Timetable</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="notices" onclick="navigate('notices')">
+          <span class="nav-icon">◌</span>
+          <span class="nav-label">Notices</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="chat" onclick="navigate('chat')">
+          <span class="nav-icon">◫</span>
+          <span class="nav-label">Chat</span>
+          <span class="nav-pip"></span>
+        </a>
+        <a class="nav-item" data-page="settings" onclick="navigate('settings')">
+          <span class="nav-icon">⚙</span>
+          <span class="nav-label">Settings</span>
+          <span class="nav-pip"></span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar" id="user-avatar">AD</div>
+          <div class="user-info">
+            <span class="user-name" id="user-name">Admin</span>
+            <span class="user-role" id="user-role">Administrator</span>
+          </div>
+          <button class="icon-btn" title="Sign out" onclick="logout()">⏻</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <button class="menu-btn" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-breadcrumb">
+          <span id="page-title">Dashboard</span>
+        </div>
+        <div class="topbar-actions">
+          <div class="search-box">
+            <input type="text" placeholder="Search..." id="global-search" />
+            <span class="search-icon">⌕</span>
+          </div>
+          <button class="notif-btn" onclick="navigate('reports')" title="Parent alerts">
+            <span>⚠</span>
+            <span class="notif-dot" id="alert-dot" hidden></span>
+          </button>
+        </div>
+      </header>
+
+      <main class="content" id="content">
+        <!-- Pages injected here -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+    <div class="modal" id="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
